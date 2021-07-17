@@ -36,7 +36,7 @@ Finally you should generate a new inode dump file which will be used next time b
 ./detect_inode_moves.py -a dump -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -f rsync-excluded-dirs.txt
 ```
 
-I also created a separate Bash script which automatically generates the correct detect_inode_moves.py and Rsync commands depending the parameters I've set on the beginning of the script.
+I also created a separate Bash script which automatically generates the correct detect_inode_moves.py and Rsync commands depending the parameters I've set on the beginning of the script. Tip: I've got some very good results by combining the patched Rsync (detect-renamed.diff + detect-renamed-lax.diff, the Rsync needs to be the patched version on the source and destionation hosts) and smart-backup.sh script!
 
 The detect_inode_moves.py and smart-backup.sh scripts have been tested on GNU/Linux only and they won't most probably work on Windows at all (because it uses /proc/mounts to detect mount points for example).
 
