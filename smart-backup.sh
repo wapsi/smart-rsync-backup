@@ -27,7 +27,7 @@ if ! grep -q "DETECT_INODE_MOVES_SCRIPT" "$1"; then
 fi
 source "$1"
 
-if [ $ONE_FILE_SYSTEM_ONLY == "1" ]; then
+if [ "$ONE_FILE_SYSTEM_ONLY" == "1" ]; then
     onefilesystemarg="--one-file-system"
 else
     onefilesystemarg=""
