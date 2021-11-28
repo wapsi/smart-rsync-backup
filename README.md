@@ -31,7 +31,7 @@ Then run the actual Rsync:
 ```
 rsync --exclude-from rsync-excluded-dirs.txt --fuzzy -HAav --delete --numeric-ids /home/ user@remotehost:/data/backups/home
 ```
-Finally you should generate a new inode dump file which will be used next time by the `detect_inode_moves.py -a detect ...`:
+Finally you should generate a new inode dump file which will be used next time by the `detect_inode_moves.py -d /home -o /tmp/home-inodes.txt ...`:
 ```
 ./detect_inode_moves.py -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -r rsync-excluded-dirs.txt
 ```
