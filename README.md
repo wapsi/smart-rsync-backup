@@ -41,7 +41,7 @@ I also created a separate Bash script which automatically generates the correct 
 The detect_inode_moves.py and smart-backup.sh scripts have been tested on GNU/Linux only and they won't most probably work on Windows at all (because it uses /proc/mounts to detect mount points for example).
 
 Requirements:
-* detect_inode_mosmart-backup.shves.py: Python3
-* smart-backup.sh: detect_inode_mosmart-backup.shves.py, SSH and Rsync
+* detect_inode_moves.py: Python3
+* smart-backup.sh: smart-backup.sh config file, detect_inode_moves.py, SSH and Rsync
 
 Big thanks to Pavel Krc (https://gist.github.com/rolicot) for creating the initial version of detect_inode_moves.py and his idea to use inode numbers to identify the existing / moved files or directories!
