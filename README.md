@@ -16,11 +16,11 @@ I had an issue when I was taking backups over the Internet to another Linux serv
 Example:
 Create the first inode dump file:
 ```
-./detect_inode_moves.py -a dump -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -f rsync-excluded-dirs.txt
+./detect_inode_moves.py -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -r rsync-excluded-dirs.txt
 ```
 Do some file or directory moves/renames now and then run the detection:
 ```
-./detect_inode_moves.py -a detect -i /tmp/home-inodes.txt -o home-renames.py -r /data/backups/home
+./detect_inode_moves.py -i /tmp/home-inodes.txt -o home-renames.py -d /data/backups/home
 ```
 Copy and run the generated rename script on the remote host:
 ```
@@ -29,19 +29,19 @@ ssh user@remotehost home-renames.py
 ```
 Then run the actual Rsync:
 ```
-rsync --exclude-from rsync-excluded-dirs.txt --fuzzy -HAav --delay-updates --delete-delay --numeric-ids /home/ user@remotehost:/data/backups/home
+rsync --exclude-from rsync-excluded-dirs.txt --fuzzy -HAav --delete --numeric-ids /home/ user@remotehost:/data/backups/home
 ```
 Finally you should generate a new inode dump file which will be used next time by the `detect_inode_moves.py -a detect ...`:
 ```
-./detect_inode_moves.py -a dump -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -f rsync-excluded-dirs.txt
+./detect_inode_moves.py -d /home -o /tmp/home-inodes.txt -e '.*/\.btrfs$' -r rsync-excluded-dirs.txt
 ```
 
-I also created a separate Bash script which automatically generates the correct detect_inode_moves.py and Rsync commands depending the parameters I've set on the beginning of the script. Tip: I've got some very good results by combining the patched Rsync (detect-renamed.diff + detect-renamed-lax.diff, the Rsync needs to be the patched version on the source and destionation hosts) and smart-backup.sh script!
+I also created a separate Bash script which automatically generates the correct detect_inode_moves.py and Rsync commands depending the parameters I've set on the beginning of the script.
 
 The detect_inode_moves.py and smart-backup.sh scripts have been tested on GNU/Linux only and they won't most probably work on Windows at all (because it uses /proc/mounts to detect mount points for example).
 
 Requirements:
 * detect_inode_mosmart-backup.shves.py: Python3
-* smart-backup.sh: detect_inode_mosmart-backup.shves.py and Rsync
+* smart-backup.sh: detect_inode_mosmart-backup.shves.py, SSH and Rsync
 
 Big thanks to Pavel Krc (https://gist.github.com/rolicot) for creating the initial version of detect_inode_moves.py and his idea to use inode numbers to identify the existing / moved files or directories!
