@@ -127,7 +127,6 @@ def finish_moves():
 def find_mount_point(path):
     path = os.path.abspath(path)
     orig_dev = os.stat(path).st_dev
-
     while path != '/':
         dir = os.path.dirname(path)
         if os.stat(dir).st_dev != orig_dev:
@@ -225,10 +224,6 @@ def find_for_moved_files(origfilehashes, filehashes, rootdirold, rootdirnew):
                 stlog('VERBOSE', 'Found moved file: ' + oldfilewithorigrootdir + ' => ' + newfilewithorigrootdir)
                 filestobemoved[newfilewithorigrootdir] = oldfilewithorigrootdir
                 origfilehashes.pop(of)
-                #try:
-                #    origfilehashes.pop(newfilewithorigrootdir)
-                #except:
-                #    pass
                 filehashes.pop(f)
                 ffound=True
                 break
@@ -239,7 +234,6 @@ def find_for_moved_files(origfilehashes, filehashes, rootdirold, rootdirnew):
 
 
 def write_move_file(filestobemoved, outputsourcereffilehandle, rootdir):
-    #print(filestobemoved)
     global lutime
     delaymovedfiles = {}
     tempmovedfiles = {}
@@ -257,7 +251,6 @@ def write_move_file(filestobemoved, outputsourcereffilehandle, rootdir):
         if (lutime + 10) < int(time.time()):
             stlog('INFO', 'Writing the output file... (written ' + str(tpc) + '/' + str(tam) + ' file moves already)')
             lutime = int(time.time())
-        #renl = 'prepare_move(\'' + tempmovedfiles[delaymovedfiles[f]].encode('UTF-8','ignore').decode('UTF-8').replace("'", "\\'") + '\', \'' + f.encode('UTF-8','ignore').decode('UTF-8').replace("'", "\\'")  + '\')\n'
         renl = 'prepare_move(\'' + filestobemoved[f].encode('UTF-8','ignore').decode('UTF-8').replace("'", "\\'") + '\', \'' + f.encode('UTF-8','ignore').decode('UTF-8').replace("'", "\\'")  + '\')\n'
         outputsourcereffilehandle.write(renl)
     outputsourcereffilehandle.write('finish_moves()\n')
@@ -383,7 +376,7 @@ def main_thread(rootdir, edirsenabled, cexcludeddirsregex, inputsourcereffile, o
     return
 
 def quit_func(signum, frame):
-    stlog('WARNING', 'Script interruped, aborting.\n')
+    stlog('WARNING', 'Script interrupted, aborting.\n')
     sys.exit(0)
     
 def stlog(level, msg):
@@ -452,9 +445,9 @@ def main():
     
     stlog('INFO', 'Script execution started')
         
-    # Performing the scanning, hashing, move detection and file renaming in a separate thread
-    # because it's very I/O instensive operation and the interruption of the script by using CTRL+C
-    # is not working very well.
+    # Performing the scanning and move detection in a separate thread
+    # because it's very I/O instensive operation and the interruption
+    # of the script by using CTRL+C is not working very well.
     work_thread = threading.Thread(target=main_thread, args=(rootdir, edirsenabled, cexcludeddirsregex, inputsourcereffile, outputsourcereffile, rsyncefile))
     work_thread.daemon = True
     work_thread.start()
